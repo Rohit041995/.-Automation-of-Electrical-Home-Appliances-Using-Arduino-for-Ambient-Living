@@ -1,0 +1,9 @@
+min Humidity:5a1e7cb8c03f975453c9fc63
+Avg Humidity:5a1e7cadc03f9754e4b67571
+Max Humidity:5a1e7c8bc03f9754e4b67570
+Min Temperature:5a1e7c4bc03f9754c52b093d
+Avg Temperature:5a1e7c20c03f9754c52b0937
+Max Temperature:5a1e7bfac03f975336a78ed8
+Min LdrSensitivity:5a1e7518c03f974b23adf1fe
+Avg LdrSensitivity:5a1e5c80c03f972c4fc70ec2
+Max LdrSensitivity:5a1e5c11c03f972c17f9579d

@@ -1,0 +1,190 @@
+#include<dht.h>
+dht DHT;
+#define DHT11_PIN 3
+int minn=0;
+int ldr1=0;
+int ldr2=0;
+int ldr3=0;
+int ldr4=0;
+int ldr5=0;
+int hud1=0;
+int hud2=0;
+int hud3=0;
+int hud4=0;
+int hud5=0;
+int avgldr=0;
+int avgtemp=0;
+int avghumid=0;
+int loops=0;
+void setup()
+{
+Serial.begin(9600); 
+
+}
+void loop()
+{
+  int x=0;
+  int y=0;
+  int chk = DHT.read11(DHT11_PIN);
+  int humid = DHT.humidity;
+  int temp = DHT.temperature;
+  unsigned char LOAD1=0,LOAD2=0,LOAD3=0; 
+  unsigned int AVldr;
+  AVldr = analogRead(A0);
+  Serial.println(" Humidity " );
+  Serial.println(DHT.humidity, 1);
+  Serial.println(" Temparature ");
+  Serial.println(DHT.temperature, 1);
+  Serial.println(AVldr);
+  if(loops==10)
+  {
+    Serial.print("total consumption values for seconds:");
+    minn=loops*2;
+    Serial.println(minn);
+    x=ldr1*0 + ldr2*25 + ldr3*50 + ldr4*75 + ldr5*100;
+    Serial.print("number of times light bulb comes at 0% power");
+    Serial.println(ldr1);
+    Serial.print("number of times light bulb comes at 25% power");
+    Serial.println(ldr2);
+    Serial.print("number of times light bulb comes at 50% power");
+    Serial.println(ldr3);
+    Serial.print("number of times light bulb comes at 75% power");
+    Serial.println(ldr4);
+    Serial.print("number of times light bulb comes at 100% power");
+    Serial.println(ldr5);
+    avgldr = x/loops;
+    Serial.print("Average power consumption of bulb at ");
+    Serial.print(minn);
+    Serial.println("seconds is:");
+    Serial.println(avgldr);
+	y=hud1*0 +hud2*25 +hud3*50 +hud4*75 +hud5*100; 
+	Serial.print("number of times Fan comes at 0% power");
+    Serial.println(hud1);
+    Serial.print("number of times Fan comes at 25% power");
+    Serial.println(hud2);
+    Serial.print("number of times Fan comes at 50% power");
+    Serial.println(hud3);
+    Serial.print("number of times Fan comes at 75% power");
+    Serial.println(hud4);
+    Serial.print("number of times light bulb comes at 100% power");
+    Serial.println(hud5);
+    avghumid = y/loops;
+    Serial.print("Average power consumption of Fan at ");
+    Serial.print(minn);
+    Serial.println("seconds is:");
+    Serial.println(avghumid);
+	ldr1=0;
+	ldr2=0;
+	ldr3=0;
+	ldr4=0;
+	ldr5=0;
+	hud1=0;
+	hud2=0;
+	hud3=0;
+	hud4=0;
+	hud5=0;
+    loops=0;
+  }
+  if(AVldr<50)
+  {
+      LOAD1=0;
+    ldr1=ldr1+1;
+      Serial.write('A');
+      CONVERT_DISPLAY(LOAD1);
+    delay(500);
+  }
+  if(AVldr>50 && AVldr<250)
+  {
+      LOAD1=25;
+    ldr2=ldr2+1;
+      Serial.write('A');
+      CONVERT_DISPLAY(LOAD1); 
+      delay(500);
+  }
+  if(AVldr>250 && AVldr<500)
+  {
+      LOAD1=50;
+    ldr3=ldr3+1;
+      Serial.write('A');
+      CONVERT_DISPLAY(LOAD1); 
+      delay(500); 
+  }
+  if(AVldr>500 && AVldr<750)
+  {
+      LOAD1=75;
+    ldr4=ldr4+1;
+      Serial.write('A');
+      CONVERT_DISPLAY(LOAD1); 
+      delay(500); 
+  }
+  if(AVldr>750)
+  {
+      LOAD1=100;
+    ldr5=ldr5+1;
+      Serial.write('A');
+      CONVERT_DISPLAY(LOAD1); 
+      delay(500); 
+  }
+  if(humid>50)
+  {
+      LOAD2=0;
+    hud1=hud1+1;
+      Serial.write('B');
+      CONVERT_DISPLAY(LOAD2); 
+      delay(500); 
+  }
+  if(humid>40 && humid<50)
+  {
+      LOAD2=25;
+    hud2=hud2+1;
+      Serial.write('B');
+      CONVERT_DISPLAY(LOAD2); 
+      delay(500); 
+  }
+  if(humid>30 && humid<40)
+  {
+      LOAD2=50;
+    hud3=hud3+1;
+      Serial.write('B');
+      CONVERT_DISPLAY(LOAD2); 
+      delay(500); 
+  }
+  if(humid>20 && humid<30)
+  {
+    LOAD2=75;
+    hud4=hud4+1;
+    Serial.write('B');
+    CONVERT_DISPLAY(LOAD2); 
+    delay(500); 
+  }
+  if(humid<20)
+  {
+    LOAD2=100;
+    hud5=hud5+1;
+    Serial.write('B');
+    CONVERT_DISPLAY(LOAD2); 
+    delay(500); 
+  }
+  loops=loops+1;
+  delay(1000);
+}
+void CONVERT_DISPLAY(unsigned int d)
+{
+  unsigned char dig1,dig2,dig3,dig[3];
+  unsigned char x;
+  unsigned char temp;
+  temp=d;
+  temp=temp/10;
+  dig1=d%10;
+  dig2=temp%10;
+  dig3=temp/10;
+  dig[0]=dig3;
+  dig[1]=dig2;
+  dig[2]=dig1;
+  for(x=0;x<3;x++)
+  {
+    temp=dig[x]|0x30;
+    Serial.println();
+    Serial.write(temp);  
+  } 
+} 
